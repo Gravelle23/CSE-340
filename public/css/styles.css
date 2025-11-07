@@ -1,6 +1,216 @@
-/******* Change Box Model ***************/
-*,
-*:before,
-*:after {
+:root {
+  --background: white;
+  --text-primary: black;
+  --text-secondary: grey;
+  --theme-color: darkblue;
+  --menu-background: darkblue;
+  --menu-text: white;
+  --accent-color: blue;
+  --card-background: white;
+  --border: grey;
+}
+
+* { 
   box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.container {
+  width: min(100%,68rem);
+  margin: auto;
+  padding: 1rem;
+}
+
+.site-wrap {
+  background: fixed var(--background);
+}
+
+#top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.brand a {
+  text-decoration: none;
+  color: var(--theme-color);
+  font-weight: bold;
+}
+
+.utility a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font: 100%;
+}
+
+.main-nav {
+  background-color: var(--menu-background);
+}
+
+.main-nav ul {
+  list-style: none;
+  margin:0;
+  padding:0.25rem 1rem;
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  justify-content: center;
+}  
+
+.main-nav a {
+  color: var(--menu-text);
+  text-decoration: none;
+  padding: 0.5rem 1rem;   
+  display: block;
+  border-radius: 0.25rem;
+}
+
+.main-nav a:active,
+.main-nav a:hover,
+.main-nav a:focus {
+  background-color: grey;
+}
+
+.hero {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+}
+
+.hero-copy h2 {
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+.card{
+  background: var(--card-background);
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--accent-color);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  max-width: 28rem;
+}
+.model{
+  margin: 0 0 0.25rem;
+  color: var(--accent-color);
+  font-size: 1.4rem;
+}
+.bullets{
+  margin: 0 0 0.5rem 1rem;
+}
+
+/* “Own Today” button image */
+.btn img{
+  width: 160px;
+  height: auto;
+  border: 0;
+}
+
+/* Center hero art */
+.hero-art{
+  justify-self: center;
+}
+
+/* ========== Grid sections ========== */
+.grid{
+  display: grid;
+  gap: 2rem;
+  margin-block: 1.25rem 2rem;
+}
+
+/* Upgrades and Reviews sections */
+.upgrades h3,
+.reviews h3{
+  font-size: 1.25rem;
+  margin: 0 0 0.75rem;
+}
+.tiles{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+.tiles a{
+  text-decoration: none;
+  color: var(--accent-color);
+  font-weight: 600;
+  display: grid;
+  gap: 0.4rem;
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: var(--menu-text);
+}
+.tiles a:hover,
+.tiles a:focus{
+  outline: 3px solid lightskyblue; /* for accessibility */
+  outline-offset: 2px;
+}
+
+/* Reviews list */
+.review-list{
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+/* ========== Footer ========== */
+.site-footer{
+  border-top: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* ========== Larger screens ========== */
+@media (min-width: 48rem){ /* ~768px */
+  .hero{
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 2rem;
+  }
+  .tiles{
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .grid{
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+@media (min-width: 70rem){  /* 1120px */
+  body{
+    background-image: url("public/images/site/checkerboard.jpg");
+    background-size: 120px 120px;
+  }
+  .site-wrap{
+    margin: 2rem auto;
+    border: 4px solid #22a3c8; 
+    border-radius: 0.5rem;
+    padding: 1rem;
+    background: #fff;
+    box-shadow: 0 10px 24px black;
+  }
 }
