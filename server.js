@@ -13,6 +13,8 @@ const expressLayouts = require("express-ejs-layouts")
 
 const app = express()
 const staticRoutes = require("./routes/static")
+const baseController = require("./controllers/baseController")
+
 
 /* ***********************
  * View Engine and Views Folder Setup
@@ -29,10 +31,9 @@ app.set("layout", "./layouts/layout")
 app.use(express.static(path.join(__dirname, "public"))) // optional, for static files
 app.use(staticRoutes)
 
-// Index route
-app.get("/", function (req, res) {
-  res.render("index", { title: "CSE Motors" })
-})
+// Index route using the baseController
+app.get("/", baseController.buildHome)
+
 
 /* ***********************
  * Local Server Information
