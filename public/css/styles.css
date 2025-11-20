@@ -214,3 +214,56 @@ img {
     box-shadow: 0 10px 24px black;
   }
 }
+
+/* ===== Inventory classification grid ===== */
+
+#inv-display {
+  list-style: none;
+  margin: 2rem auto;
+  padding: 0;
+  max-width: 960px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+#inv-display li {
+  background: var(--card-background);          
+  border: 1px solid var(--border);             
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+#inv-display img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+#inv-display .namePrice {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);         
+}
+
+#inv-display .namePrice h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
+  color: var(--theme-color);                   
+}
+
+#inv-display .namePrice a {
+  text-decoration: none;
+  color: var(--theme-color);                   
+}
+
+#inv-display .namePrice a:hover {
+  text-decoration: underline;
+}
+
+#inv-display .namePrice span {
+  font-weight: 600;
+  color: var(--text-secondary);                
+}

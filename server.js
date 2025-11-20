@@ -14,6 +14,7 @@ const expressLayouts = require("express-ejs-layouts")
 const app = express()
 const staticRoutes = require("./routes/static")
 const baseController = require("./controllers/baseController")
+const inventoryRoute = require("./routes/inventoryRoute")
 
 
 /* ***********************
@@ -33,6 +34,9 @@ app.use(staticRoutes)
 
 // Index route using the baseController
 app.get("/", baseController.buildHome)
+
+// Inventory route
+app.use("/inv", inventoryRoute)
 
 
 /* ***********************
