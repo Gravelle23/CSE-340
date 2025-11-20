@@ -4,7 +4,7 @@ require("dotenv").config()
 let pool
 
 if (process.env.NODE_ENV == "development") {
-  // SSL and log queries
+  // connect to Render DB with SSL and log queries
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -12,7 +12,7 @@ if (process.env.NODE_ENV == "development") {
     },
   })
 
-  // troubleshooting queries 
+  // troubleshoot queries during development
   module.exports = {
     async query(text, params) {
       try {
@@ -26,9 +26,11 @@ if (process.env.NODE_ENV == "development") {
     },
   }
 } else {
-  // no SSL or query logging
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false, 
+    },
   })
 
   module.exports = pool
