@@ -38,6 +38,24 @@ app.get("/", baseController.buildHome)
 // Inventory route
 app.use("/inv", inventoryRoute)
 
+/* ***********************
+ * Error Handler Middleware
+ *************************/
+const utilities = require("./utilities/")
+
+app.use(async (err, req, res, next) => {
+  const nav = await utilities.getNav()
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+
+  // Default to 500 if no status set
+  const status = err.status || 500
+
+  res.status(status).render("errors/error", {
+    title: status === 404 ? "404 Not Found" : "Server Error",
+    nav,
+    message: err.message,
+  })
+})
 
 /* ***********************
  * Local Server Information

@@ -17,4 +17,26 @@ invCont.buildByClassificationId = async function (req, res, next) {
   })
 }
 
+// Build single vehicle detail view
+invCont.buildDetailView = async function (req, res, next) {
+  const inv_id = parseInt(req.params.inv_id)
+  const vehicleData = await invModel.getInventoryById(inv_id)
+
+  // 404 if not found
+  if (!vehicleData) {
+    const err = new Error("Vehicle not found")
+    err.status = 404
+    throw err
+  }
+
+  const detailHTML = await utilities.buildVehicleDetail(vehicleData)
+  const nav = await utilities.getNav()
+
+  res.render("./inventory/detail", {
+    title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
+    nav,
+    detailHTML
+  })
+}
+
 module.exports = invCont

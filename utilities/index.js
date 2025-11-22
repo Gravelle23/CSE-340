@@ -72,6 +72,44 @@ Util.buildClassificationGrid = async function (data) {
   return grid
 }
 
+Util.handleErrors = (fn) => {
+  return function (req, res, next) {
+    return Promise.resolve(fn(req, res, next)).catch(next)
+  }
+}
+
+Util.buildVehicleDetail = async function (v) {
+  let fullImage = v.inv_image || ""
+  fullImage = fullImage.replace(/\\/g, "/")
+  fullImage = fullImage.replace(/^(\.\/|\.\.\/)+/, "")
+
+  const fileName = fullImage.split("/").pop()
+  fullImage = "/images/vehicles/" + fileName
+
+  return `
+<section class="vehicle-detail">
+  <div class="vehicle-detail__image">
+    <img src="${fullImage}" alt="Image of ${v.inv_make} ${v.inv_model}">
+  </div>
+
+  <div class="vehicle-detail__content">
+    <h2>${v.inv_year} ${v.inv_make} ${v.inv_model}</h2>
+
+    <p class="price"><strong>Price:</strong>
+      ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(v.inv_price)}
+    </p>
+
+    <p class="miles"><strong>Mileage:</strong>
+      ${new Intl.NumberFormat("en-US").format(v.inv_miles)} miles
+    </p>
+
+    <p><strong>Description:</strong> ${v.inv_description}</p>
+    <p><strong>Color:</strong> ${v.inv_color}</p>
+    <p><strong>Classification:</strong> ${v.classification_name}</p>
+  </div>
+</section>
+`
+}
 
 
 
