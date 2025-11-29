@@ -1,6 +1,7 @@
 const invModel = require("../models/inventory-model")
 const Util = {}
 
+// build the navigation bar
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications()
   let list = "<ul>"
@@ -21,16 +22,37 @@ Util.getNav = async function (req, res, next) {
   return list
 }
 
-/* **************************************
- * Build the classification view HTML
- * ************************************ */
+
+// build classification select list
+
+Util.buildClassificationList = async function (classification_id = null) {
+  let data = await invModel.getClassifications()
+  let classificationList =
+    '<select name="classification_id" id="classificationList" required>'
+  classificationList += "<option value=''>Choose a Classification</option>"
+
+  data.rows.forEach((row) => {
+    classificationList += `<option value="${row.classification_id}"`
+    if (
+      classification_id != null &&
+      row.classification_id == classification_id
+    ) {
+      classificationList += " selected"
+    }
+    classificationList += `>${row.classification_name}</option>`
+  })
+
+  classificationList += "</select>"
+  return classificationList
+}
+
+// build the classification view HTML
 Util.buildClassificationGrid = async function (data) {
   let grid = ""
 
   if (data.length > 0) {
     grid = '<ul id="inv-display">'
     data.forEach((vehicle) => {
-
       let thumb = vehicle.inv_thumbnail || ""
 
       // Normalize slashes
@@ -39,10 +61,10 @@ Util.buildClassificationGrid = async function (data) {
       // Remove ANY repeated "images/" or "vehicles/" prefixes
       thumb = thumb.replace(/(images\/vehicles\/)+/g, "images/vehicles/")
 
-      // Now remove any leading ./ or ../
+      // remove any leading ./ or ../
       thumb = thumb.replace(/^(\.\/|\.\.\/)+/, "")
 
-      // Ensure we only have the filename at the end
+      // Ensure only the filename at the end
       const fileName = thumb.split("/").pop()
 
       // Build the correct ABSOLUTE path
@@ -60,7 +82,9 @@ Util.buildClassificationGrid = async function (data) {
               ${vehicle.inv_make} ${vehicle.inv_model}
             </a>
           </h2>
-          <span>$${new Intl.NumberFormat("en-US").format(vehicle.inv_price)}</span>
+          <span>$${new Intl.NumberFormat("en-US").format(
+            vehicle.inv_price
+          )}</span>
         </div>
       </li>`
     })
@@ -72,12 +96,14 @@ Util.buildClassificationGrid = async function (data) {
   return grid
 }
 
+// error handler wrapper
 Util.handleErrors = (fn) => {
   return function (req, res, next) {
     return Promise.resolve(fn(req, res, next)).catch(next)
   }
 }
 
+// build single vehicle detail view
 Util.buildVehicleDetail = async function (v) {
   let fullImage = v.inv_image || ""
   fullImage = fullImage.replace(/\\/g, "/")
@@ -96,7 +122,10 @@ Util.buildVehicleDetail = async function (v) {
     <h2>${v.inv_year} ${v.inv_make} ${v.inv_model}</h2>
 
     <p class="price"><strong>Price:</strong>
-      ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(v.inv_price)}
+      ${new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(v.inv_price)}
     </p>
 
     <p class="miles"><strong>Mileage:</strong>
@@ -110,7 +139,5 @@ Util.buildVehicleDetail = async function (v) {
 </section>
 `
 }
-
-
 
 module.exports = Util
