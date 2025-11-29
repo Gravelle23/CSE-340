@@ -10,7 +10,6 @@ const express = require("express")
 const env = require("dotenv").config()
 const path = require("path")
 const expressLayouts = require("express-ejs-layouts")
-const bodyParser = require("body-parser")
 
 const app = express()
 const staticRoutes = require("./routes/static")
@@ -62,7 +61,7 @@ app.use(function (req, res, next) {
 /* ***********************
  * Middleware and Routes
  *************************/
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, "public"))) 
 app.use(staticRoutes)
 
