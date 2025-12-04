@@ -10,6 +10,7 @@ const express = require("express")
 const env = require("dotenv").config()
 const path = require("path")
 const expressLayouts = require("express-ejs-layouts")
+const cookieParser = require("cookie-parser")
 
 const app = express()
 const staticRoutes = require("./routes/static")
@@ -21,7 +22,7 @@ const pool = require("./database/")
 const flash = require("connect-flash")
 const messages = require("express-messages")
 const accountRoute = require("./routes/accountRoute")
-
+const utilities = require("./utilities/")
 
 /* ***********************
  * View Engine and Views Folder Setup
@@ -57,12 +58,15 @@ app.use(function (req, res, next) {
   next()
 })
 
+// JWT Token Middleware
+app.use(cookieParser())
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * Middleware and Routes
  *************************/
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static(path.join(__dirname, "public"))) 
+app.use(express.static(path.join(__dirname, "public")))
 app.use(staticRoutes)
 
 // Index route using the baseController
@@ -77,8 +81,6 @@ app.use("/account", accountRoute)
 /* ***********************
  * Error Handler Middleware
  *************************/
-const utilities = require("./utilities/")
-
 app.use(async (err, req, res, next) => {
   const nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
@@ -106,3 +108,4 @@ const host = process.env.HOST || "localhost"
 app.listen(port, () => {
   console.log(`app listening on ${host}:${port}`)
 })
+

@@ -13,14 +13,13 @@
 
 <section class="container">
   <form
-    id="addInventoryForm"
-    action="/inv/add-inventory"
+    id="updateForm"
+    action="/inv/update"
     method="post"
   >
-    <!-- Classification Select (built on server) -->
     <div class="form-row">
       <label for="classificationList">Classification</label>
-      <%- classificationList %>
+      <%- classificationSelect %>
     </div>
 
     <div class="form-row">
@@ -125,8 +124,13 @@
       >
     </div>
 
-    <button type="submit" class="btn primary">
-      Add Vehicle
+    <button type="submit" class="btn primary" disabled>
+      Update Vehicle
     </button>
+
+    <input type="hidden" name="inv_id"
+      <% if (locals.inv_id) { %> value="<%= locals.inv_id %>" <% } %>>
   </form>
 </section>
+
+<script src="/js/inv-update.js"></script>
