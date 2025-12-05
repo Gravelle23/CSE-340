@@ -1,0 +1,85 @@
+<h1><%= title %></h1>
+
+<%- messages() %>
+
+<% if (typeof errors !== "undefined" && errors && errors.array && errors.array().length > 0) { %>
+  <div class="notice">
+    <ul>
+      <% errors.array().forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<section>
+  <h2>Account Update</h2>
+
+  <form action="/account/update" method="post">
+    <div class="form-row">
+      <label for="account_firstname">First Name</label>
+      <input
+        type="text"
+        id="account_firstname"
+        name="account_firstname"
+        required
+        value="<%= account_firstname || '' %>"
+      />
+    </div>
+
+    <div class="form-row">
+      <label for="account_lastname">Last Name</label>
+      <input
+        type="text"
+        id="account_lastname"
+        name="account_lastname"
+        required
+        value="<%= account_lastname || '' %>"
+      />
+    </div>
+
+    <div class="form-row">
+      <label for="account_email">Email</label>
+      <input
+        type="email"
+        id="account_email"
+        name="account_email"
+        required
+        value="<%= account_email || '' %>"
+      />
+    </div>
+
+    <input type="hidden" name="account_id" value="<%= account_id || '' %>" />
+
+    <div class="form-row">
+      <button type="submit">Update Account</button>
+    </div>
+  </form>
+</section>
+
+<section>
+  <h2>Change Password</h2>
+
+  <p>
+    Enter a new password below to replace your current one. Password must meet
+    the same requirements as registration (length, characters, etc.).
+  </p>
+
+  <form action="/account/update-password" method="post">
+    <div class="form-row">
+      <label for="account_password">New Password</label>
+      <input
+        type="password"
+        id="account_password"
+        name="account_password"
+        required
+      />
+    </div>
+
+    <input type="hidden" name="account_id" value="<%= account_id || '' %>" />
+
+    <div class="form-row">
+      <button type="submit">Change Password</button>
+    </div>
+  </form>
+</section>
