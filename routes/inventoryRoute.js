@@ -27,6 +27,9 @@ router.post("/update",auth.checkJWTToken,auth.checkAdmin,invValidate.inventoryRu
 // Build edit inventory view
 router.get("/edit/:inv_id",auth.checkJWTToken,auth.checkAdmin,utilities.handleErrors(invController.editInventoryView))
 
+// Compare vehicles view 
+router.get("/compare",invValidate.compareRules(),invValidate.checkCompareData,utilities.handleErrors(invController.buildCompareView))
+
 // Return inventory by classification as JSON
 router.get("/getInventory/:classification_id",utilities.handleErrors(invController.getInventoryJSON))
 

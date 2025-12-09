@@ -52,7 +52,10 @@ invCont.buildDetailView = async function (req, res, next) {
     title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
     nav,
     detailHTML,
+    inv_id: vehicleData.inv_id,          
+    vehicleData                         
   })
+
 }
 
 // Inventory Management view 
@@ -336,6 +339,78 @@ invCont.deleteInventory = async function (req, res, next) {
   }
 }
 
+// Build vehicle comparison view
+invCont.buildCompareView = async function (req, res, next) {
+  try {
+    const nav = await utilities.getNav()
+    const allVehicles = await invModel.getAllInventory()
 
+    const firstId = req.query.first ? parseInt(req.query.first) : null
+    const secondId = req.query.second ? parseInt(req.query.second) : null
+
+    let firstVehicle = null
+    let secondVehicle = null
+    let comparableVehicles = []
+    let pageTitle = "Compare Vehicles"
+
+    // if both vehicle ids are provided, get their data
+    if (firstId && secondId) {
+      // different vehicles selected
+      if (firstId === secondId) {
+        req.flash(
+          "notice",
+          "Please choose two different vehicles to compare."
+        )
+        return res.status(400).render("inventory/compare", {
+          title: pageTitle,
+          nav,
+          errors: null,
+          allVehicles,
+          firstVehicle: null,
+          secondVehicle: null,
+          comparableVehicles: [],
+          firstId,
+          secondId,
+        })
+      }
+
+      firstVehicle = await invModel.getInventoryById(firstId)
+      secondVehicle = await invModel.getInventoryById(secondId)
+
+      if (!firstVehicle || !secondVehicle) {
+        req.flash("notice", "One or both vehicles could not be found.")
+        return res.status(404).render("inventory/compare", {
+          title: pageTitle,
+          nav,
+          errors: null,
+          allVehicles,
+          firstVehicle: null,
+          secondVehicle: null,
+          comparableVehicles: [],
+          firstId,
+          secondId,
+        })
+      }
+
+      comparableVehicles = await invModel.getComparableVehicles(firstId)
+
+      pageTitle = `Compare ${firstVehicle.inv_year} ${firstVehicle.inv_make} ${firstVehicle.inv_model} vs ${secondVehicle.inv_year} ${secondVehicle.inv_make} ${secondVehicle.inv_model}`
+    }
+
+    return res.render("inventory/compare", {
+      title: pageTitle,
+      nav,
+      errors: null,
+      allVehicles,
+      firstVehicle,
+      secondVehicle,
+      comparableVehicles,
+      firstId,
+      secondId,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
 
 module.exports = invCont

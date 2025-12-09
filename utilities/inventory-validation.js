@@ -1,5 +1,6 @@
 const utilities = require(".")
-const { body, validationResult } = require("express-validator")
+const invModel = require("../models/inventory-model")
+const { body, query, validationResult } = require("express-validator")
 
 const invValidate = {}
 
@@ -152,7 +153,8 @@ invValidate.checkUpdateData = async (req, res, next) => {
   let errors = validationResult(req)
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
-    const classificationSelect = await utilities.buildClassificationList(classification_id)
+    const classificationSelect =
+      await utilities.buildClassificationList(classification_id)
     const itemName = `${inv_make} ${inv_model}`
 
     return res.status(400).render("inventory/edit-inventory", {
@@ -171,6 +173,45 @@ invValidate.checkUpdateData = async (req, res, next) => {
       inv_miles,
       inv_color,
       classification_id,
+    })
+  }
+  next()
+}
+
+// compare validation rules
+invValidate.compareRules = () => {
+  return [
+    query("first")
+      .optional({ checkFalsy: true })
+      .isInt({ min: 1 })
+      .withMessage("First vehicle selection is invalid."),
+    query("second")
+      .optional({ checkFalsy: true })
+      .isInt({ min: 1 })
+      .withMessage("Second vehicle selection is invalid."),
+  ]
+}
+
+// check compare data
+invValidate.checkCompareData = async (req, res, next) => {
+  let errors = validationResult(req)
+
+  if (!errors.isEmpty()) {
+    let nav = await utilities.getNav()
+    const allVehicles = await invModel.getAllInventory()
+    const firstId = req.query.first || ""
+    const secondId = req.query.second || ""
+
+    return res.status(400).render("inventory/compare", {
+      title: "Compare Vehicles",
+      nav,
+      errors,
+      allVehicles,
+      firstVehicle: null,
+      secondVehicle: null,
+      comparableVehicles: [],
+      firstId,
+      secondId,
     })
   }
   next()

@@ -1,0 +1,77 @@
+<h1><%= title %></h1>
+
+<%- messages() %>
+
+<% if (typeof errors !== "undefined" && errors && errors.array && errors.array().length > 0) { %>
+  <div class="notice">
+    <ul>
+      <% errors.array().forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<main class="container compare-page">
+  <section class="compare-select">
+    <h2>Select vehicles to compare</h2>
+    <form method="get" action="/inv/compare" class="compare-form">
+      <div class="form-row">
+        <label for="first">First vehicle</label>
+        <select id="first" name="first" required>
+          <option value="">Choose a vehicle</option>
+          <% if (allVehicles && allVehicles.length) { %>
+            <% allVehicles.forEach(v => { %>
+              <option value="<%= v.inv_id %>" <%= String(firstId || "") === String(v.inv_id) ? "selected" : "" %>>
+                <%= v.inv_year %> <%= v.inv_make %> <%= v.inv_model %> - $<%= v.inv_price %>
+              </option>
+            <% }) %>
+          <% } %>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="second">Second vehicle</label>
+        <select id="second" name="second" required>
+          <option value="">Choose a vehicle</option>
+          <% if (allVehicles && allVehicles.length) { %>
+            <% allVehicles.forEach(v => { %>
+              <option value="<%= v.inv_id %>" <%= String(secondId || "") === String(v.inv_id) ? "selected" : "" %>>
+                <%= v.inv_year %> <%= v.inv_make %> <%= v.inv_model %> - $<%= v.inv_price %>
+              </option>
+            <% }) %>
+          <% } %>
+        </select>
+      </div>
+
+      <button type="submit" class="btn primary">Compare</button>
+    </form>
+  </section>
+
+  <% if (firstVehicle && secondVehicle) { %>
+    <section class="compare-grid">
+      <article class="vehicle-card">
+        <img
+          src="<%= firstVehicle.inv_image %>"
+          alt="Image of <%= firstVehicle.inv_make %> <%= firstVehicle.inv_model %>"
+          class="compare-image"
+        >
+
+        <h2><%= firstVehicle.inv_year %> <%= firstVehicle.inv_make %> <%= firstVehicle.inv_model %></h2>
+        <p><strong>Price:</strong> $<%= firstVehicle.inv_price %></p>
+        <p><strong>Miles:</strong> <%= firstVehicle.inv_miles %></p>
+        <p><strong>Color:</strong> <%= firstVehicle.inv_color %></p>
+        <p><strong>Classification:</strong> <%= firstVehicle.classification_name %></p>
+        <p><strong>Description:</strong> <%= firstVehicle.inv_description %></p>
+      </article>
+
+      <article class="vehicle-card">
+        <img
+          src="<%= secondVehicle.inv_image %>"
+          alt="Image of <%= secondVehicle.inv_make %> <%= secondVehicle.inv_model %>"
+          class="compare-image"
+        >
+
+        <h2><%= secondVehicle.inv_year %> <%= secondVehicle.inv_make %> <%= secondVehicle.inv_model %></h2>
+        <p><strong>Price:</strong> $<%= secondVehicle.inv_price %></p>
+        <p><strong>Miles:</strong> <%

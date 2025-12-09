@@ -41,6 +41,47 @@ async function getInventoryById(inv_id) {
   }
 }
 
+// get all inventory items with classification names
+async function getAllInventory() {
+  try {
+    const sql = `
+      SELECT i.*, c.classification_name
+      FROM public.inventory AS i
+      JOIN public.classification AS c
+        ON i.classification_id = c.classification_id
+      ORDER BY i.inv_make, i.inv_model, i.inv_year
+    `
+    const data = await pool.query(sql)
+    return data.rows
+  } catch (error) {
+    console.error("getAllInventory error " + error)
+    throw error
+  }
+}
+
+// get comparable vehicles based on classification and price
+async function getComparableVehicles(inv_id) {
+  try {
+    const sql = `
+      SELECT i2.*, c.classification_name
+      FROM public.inventory AS i2
+      JOIN public.inventory AS base
+        ON base.classification_id = i2.classification_id
+      JOIN public.classification AS c
+        ON i2.classification_id = c.classification_id
+      WHERE base.inv_id = $1
+        AND i2.inv_id <> $1
+      ORDER BY ABS(i2.inv_price - base.inv_price)
+      LIMIT 3
+    `
+    const data = await pool.query(sql, [inv_id])
+    return data.rows
+  } catch (error) {
+    console.error("getComparableVehicles error " + error)
+    throw error
+  }
+}
+
 // Insert a new classification
 async function addClassification(classification_name) {
   try {
@@ -146,6 +187,4 @@ async function deleteInventory(inv_id) {
   }
 }
 
-
-
-module.exports = {getClassifications, getInventoryByClassificationId, getInventoryById, addClassification, addInventory, updateInventory, deleteInventory}
+module.exports = {getClassifications,getInventoryByClassificationId,getInventoryById,getAllInventory,addInventory,updateInventory,deleteInventory,getComparableVehicles,addClassification}

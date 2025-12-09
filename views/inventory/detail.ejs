@@ -2,5 +2,16 @@
 
 <main>
   <h1><%= title %></h1>
+
   <%- detailHTML %>
+
+  <section class="compare-link">
+    <a 
+      href="/inv/compare?first=<%= inv_id %>" 
+      class="btn primary"
+      style="display:inline-block;margin-top:1rem;"
+    >
+      Compare This Vehicle
+    </a>
+  </section>
 </main>
